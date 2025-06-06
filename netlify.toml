@@ -1,0 +1,28 @@
+[build]
+  publish = "public"
+  command = "echo 'Static site - no build needed'"
+
+# Redirect rules for SPA routing
+[[redirects]]
+  from = "/callback"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.spotify.com https://accounts.spotify.com; font-src 'self'; media-src 'self';"
+
+# Environment variables for build
+[build.environment]
+  NODE_VERSION = "18"

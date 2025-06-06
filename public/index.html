@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Gen - Smart Playlist Generator</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1> ViVi </h1>
+                <p>Smart Playlist Generator</p>
+            </div>
+        </header>
+
+        <main>
+            <!-- Login Section (shown when not authenticated) -->
+            <section id="login-section" class="section">
+                <div class="welcome-content">
+                    <h2>Discover Your Next Favorite Songs</h2>
+                    <p>Enter any song and we'll create a personalized playlist just for you using Spotify's powerful recommendation engine.</p>
+                    
+                    <div class="features">
+                        <div class="feature">
+                            
+                            <h3>Smart Recommendations</h3>
+                            <p>AI-powered song suggestions based on your input</p>
+                        </div>
+                        <div class="feature">
+                            <h3>Instant Playlists</h3>
+                            <p>Generate curated playlists in seconds</p>
+                        </div>
+                        <div class="feature">
+                            <h3>Save to Spotify</h3>
+                            <p>Add generated playlists directly to your account</p>
+                        </div>
+                    </div>
+
+                    <button id="login-btn" class="spotify-btn">
+                        <span class="spotify-icon">♪</span>
+                        Connect with Spotify
+                    </button>
+                </div>
+            </section>
+
+            <!-- Main App Section (shown when authenticated) -->
+            <section id="app-section" class="section hidden">
+                <div class="user-info">
+                    <img id="user-avatar" src="" alt="User Avatar" class="avatar">
+                    <span id="user-name">Loading...</span>
+                    <button id="logout-btn" class="logout-btn">Logout</button>
+                </div>
+
+                <div class="search-container">
+                    <h2>Enter a Song to Get Started</h2>
+                    <div class="search-box">
+                        <input type="text" id="song-input" placeholder="Search for a song (e.g., 'Blinding Lights by The Weeknd')" />
+                        <button id="search-btn">Search</button>
+                    </div>
+                    
+                    <!-- Search Results -->
+                    <div id="search-results" class="search-results hidden">
+                        <h3>Select a song:</h3>
+                        <div id="song-list" class="song-list"></div>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div id="loading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>Generating your playlist...</p>
+                </div>
+
+                <!-- Generated Playlist -->
+                <div id="playlist-container" class="playlist-container hidden">
+                    <div class="playlist-header">
+                        <h2>Your Generated Playlist</h2>
+                        <div class="playlist-actions">
+                            <button id="save-playlist-btn" class="save-btn">Save to Spotify</button>
+                            <button id="generate-new-btn" class="secondary-btn">Generate New</button>
+                        </div>
+                    </div>
+                    <div id="playlist-tracks" class="playlist-tracks"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Made By PRAJ ❤️ using Spotify Web API</p>
+        </footer>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message-container" class="message-container"></div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/spotify-api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
