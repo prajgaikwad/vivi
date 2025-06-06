@@ -7,6 +7,9 @@ class PlayGenApp {
         
         this.initializeElements();
         this.bindEvents();
+        
+        // Check initial auth state
+        this.checkInitialAuthState();
     }
 
     initializeElements() {
@@ -61,8 +64,18 @@ class PlayGenApp {
         this.generateNewBtn.addEventListener('click', () => this.handleGenerateNew());
     }
 
+    // Check initial authentication state
+    checkInitialAuthState() {
+        if (window.spotifyAuth && window.spotifyAuth.isAuthenticated()) {
+            this.handleAuthStateChange(true);
+        } else {
+            this.handleAuthStateChange(false);
+        }
+    }
+
     // Handle authentication state changes
     handleAuthStateChange(isAuthenticated) {
+        console.log('Auth state changed:', isAuthenticated);
         if (isAuthenticated) {
             this.showAppSection();
             this.loadUserProfile();

@@ -20,8 +20,9 @@ class SpotifyAuth {
     }
 
     init() {
-        // Check if we're returning from Spotify auth
-        if (window.location.hash) {
+        // Check if we're returning from Spotify auth (look for code in URL)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('code')) {
             this.handleCallback();
         } else {
             // Check for existing token
@@ -64,8 +65,8 @@ class SpotifyAuth {
         const codeChallenge = await this.generateCodeChallenge(codeVerifier);
 
         // Store code verifier for later use
-        sessionStorage.setItem('code_verifier', codeVerifier);
-        sessionStorage.setItem('state', state);
+        localStorage.setItem('code_verifier', codeVerifier);
+        localStorage.setItem('state', state);
 
         const params = new URLSearchParams({
             response_type: 'code',
@@ -90,6 +91,8 @@ class SpotifyAuth {
         if (error) {
             console.error('Spotify auth error:', error);
             this.showMessage('Authentication failed. Please try again.', 'error');
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
             return;
         }
 
@@ -99,9 +102,11 @@ class SpotifyAuth {
         }
 
         // Verify state
-        const storedState = sessionStorage.getItem('state');
+        const storedState = localStorage.getItem('state');
         if (state !== storedState) {
             console.error('State mismatch');
+            this.showMessage('Authentication failed. Please try again.', 'error');
+            window.history.replaceState({}, document.title, window.location.pathname);
             return;
         }
 
@@ -112,12 +117,14 @@ class SpotifyAuth {
         } catch (error) {
             console.error('Token exchange failed:', error);
             this.showMessage('Authentication failed. Please try again.', 'error');
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
     }
 
     // Exchange authorization code for access token
     async exchangeCodeForToken(code) {
-        const codeVerifier = sessionStorage.getItem('code_verifier');
+        const codeVerifier = localStorage.getItem('code_verifier');
         
         if (!codeVerifier) {
             throw new Error('Code verifier not found');
@@ -138,15 +145,17 @@ class SpotifyAuth {
         });
 
         if (!response.ok) {
+            const errorData = await response.text();
+            console.error('Token exchange error:', errorData);
             throw new Error(`Token exchange failed: ${response.status}`);
         }
 
         const data = await response.json();
         this.setTokens(data);
         
-        // Clean up session storage
-        sessionStorage.removeItem('code_verifier');
-        sessionStorage.removeItem('state');
+        // Clean up localStorage
+        localStorage.removeItem('code_verifier');
+        localStorage.removeItem('state');
     }
 
     // Set tokens and expiration
